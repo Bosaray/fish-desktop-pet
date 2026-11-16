@@ -89,21 +89,26 @@ async function call(op,a={}){
 function menu(){if(!tray)return;const connected=device?.snapshot().connected===true;tray.setImage(statusIcon(nativeImage,path.join(__dirname,'renderer/assets/icon.png'),connected));tray.setToolTip('鱼鱼桌宠 · '+(connected?'已连接':'未连接 / 重连中'));tray.setContextMenu(Menu.buildFromTemplate([
  {label:win.isVisible()?'隐藏鱼鱼':'显示鱼鱼',click:()=>{win.isVisible()?win.hide():win.showInactive();menu();}},
  {label:'桌宠设置…',click:settings},
- {label:'玩一局泡泡',click:()=>send('command',{kind:'bubbles'})},
- {label:'玩一局球',click:()=>send('command',{kind:'ball'})},
- {label:'零食盒：'+homeStore.snapshot().items.filter(i=>i.state==='available').length+'/8份'+(homeStore.snapshot().error?' · 记录异常':''),enabled:false},
- {label:'举一张收藏',click:()=>send('command',{kind:'showFavorite'})},
- {label:'回小窝坐坐',click:()=>send('command',{kind:'nestRest'})},
- {label:'吃盒里一份',click:()=>send('command',{kind:'snackEat'})},
- ...['nest','box'].map(name=>({label:'把'+(name==='nest'?'小窝':'零食盒')+'放到鱼鱼旁边',click:()=>send('home-place',{name})})),
- ...['nest','box'].map(name=>({label:'隐藏'+(name==='nest'?'小窝':'零食盒'),click:()=>{const p=homeStore.snapshot().props[name];if(p){homeStore.operate('prop',{operationId:require('node:crypto').randomUUID(),name,...p,visible:false});send('home-state',homeStore.snapshot());}}})),
- ...['fish','cake'].map(food=>({label:'存一份'+(food==='fish'?'小鱼干':'蛋糕'),click:()=>{try{homeStore.operate('stock',{operationId:require('node:crypto').randomUUID(),food});send('home-state',homeStore.snapshot());menu();}catch(e){showText(e.message);}}})),
- {label:'收起玩具',click:()=>send('command',{kind:'tidy'})},
- {label:'始终置顶',type:'checkbox',checked:cfg.alwaysOnTop===true,click:item=>configure({alwaysOnTop:item.checked})},
- {label:'找回并置顶',click:()=>{configure({alwaysOnTop:true});win.showInactive();send('command',{kind:'reset'});windowLayer.restore();}},
+ {type:'separator'},
+ {label:'和鱼鱼玩',submenu:[
+  {label:'戳泡泡',click:()=>send('command',{kind:'bubbles'})},
+  {label:'玩球',click:()=>send('command',{kind:'ball'})},
+  {label:'收起玩具',click:()=>send('command',{kind:'tidy'})},
+  {type:'separator'},
+  {label:'举一张收藏',click:()=>send('command',{kind:'showFavorite'})},
+  {label:'回小窝休息',click:()=>send('command',{kind:'nestRest'})},
+  {label:'吃一份零食',click:()=>send('command',{kind:'snackEat'})}
+ ]},
+ {label:'摆放道具',submenu:[
+  ...['nest','box'].map(name=>({label:'把'+(name==='nest'?'小窝':'零食盒')+'放到旁边',click:()=>send('home-place',{name})})),
+  {type:'separator'},
+  ...['nest','box'].map(name=>({label:'显示'+(name==='nest'?'小窝':'零食盒'),type:'checkbox',checked:homeStore.snapshot().props[name]?.visible===true,click:item=>{const p=homeStore.snapshot().props[name];if(p){homeStore.operate('prop',{operationId:require('node:crypto').randomUUID(),name,...p,visible:item.checked});send('home-state',homeStore.snapshot());menu();}}}))
+ ]},
+ {type:'separator'},
  {label:cfg.autonomy?'暂停自主活动':'恢复自主活动',click:()=>configure({autonomy:!cfg.autonomy})},
- {label:'立即停止并释放鼠标',click:()=>{send('command',{kind:'stop'});void stopCursor();void endCarry(false);}},
- {label:'找回鱼鱼',click:()=>{win.showInactive();send('command',{kind:'reset'});}},
+ {label:'停止当前动作',click:()=>{send('command',{kind:'stop'});void stopCursor();void endCarry(false);}},
+ {label:'找回鱼鱼',click:()=>{configure({alwaysOnTop:true});win.showInactive();send('command',{kind:'reset'});windowLayer.restore();}},
+ {type:'separator'},
  {label:'退出',click:()=>app.quit()}
  ]));}
 async function connect(){

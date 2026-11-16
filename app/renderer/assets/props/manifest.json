@@ -1,0 +1,83 @@
+{
+  "source": "User fish-props-art.zip, received 2026-11-15",
+  "files": [
+    {
+      "file": "cushion.png",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA",
+      "bytes": 103535,
+      "sha256": "7000b4b40b63c449bb5f4ec9edbf7dfe70e15206183c750a11ff8e5751139bb5",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        52,
+        144,
+        460,
+        368
+      ],
+      "corners": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "file": "nest-back.png",
+      "size": [
+        1024,
+        512
+      ],
+      "mode": "RGBA",
+      "bytes": 197420,
+      "sha256": "0745ec7ca1564e296e1328f7d26d46e929f1e1c6dad8cead40ca0512b8041968",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        102,
+        150,
+        921,
+        362
+      ],
+      "corners": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "file": "snack-box.png",
+      "size": [
+        512,
+        768
+      ],
+      "mode": "RGBA",
+      "bytes": 154918,
+      "sha256": "00f03dbe5fed29faf4334dbc64f0474d16e970297bdbbd834f8fb0f1193abc77",
+      "alphaRange": [
+        0,
+        255
+      ],
+      "alphaBounds": [
+        51,
+        243,
+        460,
+        524
+      ],
+      "corners": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "name": "fish-desktop-rig",
+  "version": "1.9.0-beta.10",
+  "description": "鱼鱼桌宠：已验收骨骼动画与真实桌面互动",
+  "main": "main.js",
+  "author": "Bosaray",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "ws": "8.22.0"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "com.bosaray.fishdesktop.rig",
+    "productName": "鱼鱼桌宠",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**/*",
+      "renderer/**/*",
+      "LICENSE.txt",
+      "THIRD_PARTY_NOTICES.md",
+      "使用说明.txt",
+      "settings.html",
+      "settings-preload.js"
+    ],
+    "extraResources": [
+      {
+        "from": "helper",
+        "to": "helper",
+        "filter": [
+          "*.exe",
+          "foods/*.png"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "鱼鱼桌宠-${version}.${ext}"
+    },
+    "portable": {
+      "requestExecutionLevel": "user"
+    },
+    "npmRebuild": false
+  },
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test ../tests/audio.cjs ../tests/bubbles.cjs ../tests/client.cjs ../tests/food.cjs ../tests/home-adapter.test.cjs ../tests/home-cushion.test.cjs ../tests/home-layers.test.cjs ../tests/home-live-failures.test.cjs ../tests/home-store.test.cjs ../tests/hug-cushion.test.cjs ../tests/perch-target.test.cjs ../tests/platform.cjs ../tests/play.test.cjs ../tests/props-art.test.cjs ../tests/snack-panel.test.cjs",
+    "dist": "node scripts/build.cjs"
+  }
+}

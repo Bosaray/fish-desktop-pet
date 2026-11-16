@@ -1,6 +1,6 @@
 (()=>{
  const api=window.desktopAPI,s=window.productionState;let task=null,platform=null,gen=0,last=performance.now(),nextAuto=last+14000,lastWrite=0,initialized=false;
- const c=()=>window.ctl,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),say=t=>emit('action.note',t),note=t=>api.state({x:c().pet.x,y:c().pet.gy,note:t});
+ const c=()=>window.ctl,clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),say=t=>{window.desktopCommandFailure=String(t);return false;},note=t=>api.state({x:c().pet.x,y:c().pet.gy,note:t});
  const ghost=document.getElementById('heldIcon'),life=new window.DesktopAutonomy();window.desktopLife=life;let lastStatus=0;
  const emit=(kind,detail='',gateApplied=false)=>window.desktopEvent?.(kind,detail,gateApplied);
  function cancel(reason='stop'){window.desktopHomeCancel?.(reason);window.desktopPlayCancel?.(reason);if(task?.evidenceId)window.desktopActionJournal?.fact('interaction',task.kind,'interrupted',task.evidenceId);window.desktopRemoteCancel?.();gen++;const old=task;task=null;platform=null;ghost.hidden=true;window.labObjectRelease?.();window.labStopFeed?.();if(c()&&!['air','drag'].includes(c().pet.mode)){c().pet.gy=c().pet.fy;c().pet.targetY=c().pet.fy;}
@@ -122,7 +122,7 @@
    const policy=s.cfg.autonomyPolicy,choices=['walk','word','rest','chat','diary','bubbles','ball'];
    const hour=Number(new Intl.DateTimeFormat('en',{timeZone:'Asia/Shanghai',hour:'numeric',hourCycle:'h23'}).format(new Date()));const quiet=policy&&(policy.quietFrom===policy.quietTo?false:policy.quietFrom<policy.quietTo?hour>=policy.quietFrom&&hour<policy.quietTo:hour>=policy.quietFrom||hour<policy.quietTo);if(quiet)choices.splice(choices.indexOf('bubbles'),2);
    if(!quiet){for(const id of ['showFavorite','nestRest'])if(window.desktopHomeEligible?.(id))choices.push(id);}
-   const stocked=life.satiety<=45&&policy?.behaviors?.snackEat?.enabled&&window.desktopHomeEligible?.('snackEat');if(stocked&&!quiet)choices.push('snackEat');else if(life.satiety<=65)choices.push('food','askFood');
+   const stocked=life.satiety<=45&&policy?.behaviors?.snackEat?.enabled&&window.desktopHomeEligible?.('snackEat');if(stocked&&!quiet)choices.push('snackEat');// Empty boxes and hunger do not request QQ help.
    if(s.cfg.allowIcons&&!s.world.autoArrange&&s.world.icons.some(o=>visible(o)))choices.push('icon');
    if(s.cfg.allowWindows&&s.world.windows.length)choices.push('push','perch');
    if(s.cfg.allowMouse&&Math.hypot(s.input.x-ctl.pet.x,s.input.y-ctl.pet.gy+100)<180)choices.push('mouse');

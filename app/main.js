@@ -10,6 +10,7 @@ const {openHomeStore}=require('./lib/home-store.cjs'),{DesktopAssets}=require('.
 const {checkedHome}=require('./lib/home-summary.cjs');
 const playStore=require('./lib/play-store.cjs');
 const {sampleCursor}=require('./lib/cursor-sampling.cjs');
+const {createMousePass}=require('./lib/mouse-pass.cjs');let mousePass;
 let windowLayer;
 app.disableHardwareAcceleration();
 const TEST=process.env.FISH_RELEASE_TEST==='1',PROFILE=process.env.FISH_PET_PROFILE?path.resolve(process.env.FISH_PET_PROFILE):path.join(app.getPath('appData'),'FishDesktopPet');
@@ -47,7 +48,7 @@ const local=p=>{const d=screen.screenToDipPoint({x:Math.round(p.x),y:Math.round(
 const physical=p=>screen.dipToScreenPoint({x:Math.round(display.bounds.x+p.x),y:Math.round(display.bounds.y+p.y)});
 function showText(text){lastRefreshError=String(text).slice(0,180);runtimeStatus();}
 function settings(){if(settingsWin&&!settingsWin.isDestroyed()){settingsWin.show();return;}settingsWin=new BrowserWindow({width:620,height:760,title:'鱼鱼桌宠设置',autoHideMenuBar:true,webPreferences:{preload:path.join(__dirname,'settings-preload.js'),contextIsolation:true,nodeIntegration:false,sandbox:true}});settingsWin.webContents.setWindowOpenHandler(()=>({action:'deny'}));settingsWin.webContents.on('will-navigate',e=>e.preventDefault());settingsWin.loadFile(path.join(__dirname,'settings.html'));}
-function configure(patch){cfg={...cfg,...patch};persist();if(patch.autonomy===false||patch.autonomyPolicy?.enabled===false){void stopCursor();void endCarry(false);}windowLayer?.restore();if(cfg.ignoreMouse)win.setIgnoreMouseEvents(true,{forward:false});send('config',cfg);menu();}
+function configure(patch){cfg={...cfg,...patch};persist();if(patch.autonomy===false||patch.autonomyPolicy?.enabled===false){void stopCursor();void endCarry(false);}windowLayer?.restore();mousePass?.update(false,cfg.ignoreMouse===true);send('config',cfg);menu();}
 async function refresh(){if(snapBusy||!native)return;snapBusy=true;try{
  const raw=await native.request('snapshot');const own=Number(win.getNativeWindowHandle().readBigUInt64LE());
  const icons=raw.icons.map(o=>{const p=local({x:o.ScreenX,y:o.ScreenY});return {key:o.Key,name:o.Name,x:p.x,y:p.y,sx:o.ScreenX,sy:o.ScreenY,foodWidget:o.Key.startsWith("fish-widget:"),topmost:o.Key.startsWith("fish-widget:")&&raw.foodState?.topmost===true};}).filter(o=>o.x>-70&&o.x<display.bounds.width&&o.y>-70&&o.y<display.bounds.height);
@@ -129,7 +130,7 @@ function ipc(){
 for(const event of playHistory.pending())if(!actionRows.some(r=>r.id===event.id))actionRows.push(event);saveActions();device?.activity({...value,home:{revision:homeStore.snapshot().revision,receivedAt:Date.now(),inventory:{fish:homeStore.snapshot().items.filter(i=>i.state==='available'&&i.food==='fish').length,cake:homeStore.snapshot().items.filter(i=>i.state==='available'&&i.food==='cake').length},error:!!homeStore.snapshot().error},actions:actionRows.slice(0,24),visible:win.isVisible(),suspended});}});
  ipcMain.handle('fish:init',e=>{if(!trusted(e))throw Error('无效窗口');return{cfg,world,input,position:saved.position};});
  ipcMain.handle('fish:call',(e,m)=>{if(!trusted(e)||typeof m?.op!=='string')throw Error('无效窗口');return call(m.op,m.args);});
- ipcMain.on('fish:hit',(e,v)=>{if(trusted(e)){win.setIgnoreMouseEvents(cfg.ignoreMouse||v!==true,{forward:!cfg.ignoreMouse});if(v!==true)windowLayer?.restore();}});
+ ipcMain.on('fish:hit',(e,v)=>{if(trusted(e)){mousePass?.update(v===true,cfg.ignoreMouse===true);}});
  ipcMain.on('fish:layer-restore',e=>{if(trusted(e))windowLayer?.restore();});
  ipcMain.on('fish:position-trace',(e,p)=>{if(trusted(e)&&['explicit-reset','perch-detach'].includes(p?.reason)&&validPoint(p.from)&&validPoint(p.to))log('位置变化 '+JSON.stringify(p));});
  ipcMain.on('fish:local-result',(e,v)=>{if(!trusted(e)||!['showFavorite','nestRest','snackEat'].includes(v?.name)||!['empty','noFavorite','differentSupport','storage','timeout','unreachable','blocked','accepted','completed'].includes(v.code))return;localCommand={name:v.name,ok:v.ok===true,code:v.code,at:Date.now()};runtimeStatus();});
@@ -147,7 +148,7 @@ async function start(){
  win.webContents.session.webRequest.onBeforeRequest({urls:['http://*/*','https://*/*','ws://*/*','wss://*/*']},(d,cb)=>cb({cancel:true}));
  win.webContents.on('render-process-gone',()=>{ready=false;void stopCursor();void endCarry(false);log('骨骼渲染中断');if(!quitting)win.reload();});
  win.on('hide',()=>{send('visibility',false);send('command',{kind:'stop'});void stopCursor();void endCarry(false);});win.on('show',()=>send('visibility',true));
- win.on('close',e=>{if(!quitting){e.preventDefault();win.hide();menu();}});win.setIgnoreMouseEvents(true,{forward:true});windowLayer=createWindowLayer({window:win,enabled:()=>cfg.alwaysOnTop});win.on('blur',()=>windowLayer.restore());win.on('show',()=>windowLayer.restore());win.on('restore',()=>windowLayer.restore());timers.push(setInterval(()=>windowLayer.apply(),2000));
+ win.on('close',e=>{if(!quitting){e.preventDefault();win.hide();menu();}});mousePass=createMousePass(win);mousePass.update(false,cfg.ignoreMouse===true);windowLayer=createWindowLayer({window:win,enabled:()=>cfg.alwaysOnTop});win.on('blur',()=>windowLayer.restore());win.on('show',()=>windowLayer.restore());win.on('restore',()=>windowLayer.restore());timers.push(setInterval(()=>windowLayer.apply(),2000));
  tray=new Tray(nativeImage.createFromPath(path.join(__dirname,'renderer/assets/icon.png')));tray.setToolTip('鱼鱼桌宠 · 骨骼版');tray.on('click',()=>{win.showInactive();menu();});menu();
  if(fs.existsSync(journal)){carry=read(journal);await endCarry(false);}
  // Legacy detached feed widgets are retired; the snack box owns food UI.

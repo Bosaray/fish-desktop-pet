@@ -1,6 +1,6 @@
 {
   "name": "fish-desktop-rig",
-  "version": "1.9.0-beta.12",
+  "version": "1.9.0-beta.13",
   "description": "鱼鱼桌宠：已验收骨骼动画与真实桌面互动",
   "main": "main.js",
   "author": "Bosaray",
@@ -59,7 +59,7 @@
   },
   "scripts": {
     "start": "electron .",
-    "test": "node --test ../tests/audio.cjs ../tests/bubbles.cjs ../tests/client.cjs ../tests/food.cjs ../tests/home-adapter.test.cjs ../tests/home-cushion.test.cjs ../tests/home-layers.test.cjs ../tests/home-live-failures.test.cjs ../tests/home-store.test.cjs ../tests/hug-cushion.test.cjs ../tests/perch-target.test.cjs ../tests/platform.cjs ../tests/play.test.cjs ../tests/props-art.test.cjs ../tests/snack-panel.test.cjs",
+    "test": "node --test ../tests/audio.cjs ../tests/bubbles.cjs ../tests/client.cjs ../tests/food.cjs ../tests/home-adapter.test.cjs ../tests/home-cushion.test.cjs ../tests/home-layers.test.cjs ../tests/home-live-failures.test.cjs ../tests/home-store.test.cjs ../tests/hug-cushion.test.cjs ../tests/perch-target.test.cjs ../tests/platform.cjs ../tests/play.test.cjs ../tests/props-art.test.cjs ../tests/snack-panel.test.cjs ../tests/mouse-pass.test.cjs",
     "dist": "node scripts/build.cjs"
   }
 }

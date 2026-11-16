@@ -5,9 +5,11 @@
   if(!layer){const stage=document.getElementById('stage');layer=node('svg',{'pointer-events':'none','aria-hidden':'true',width:'100%',height:'100%'});layer.style.cssText='position:absolute;inset:0;overflow:visible;pointer-events:none';stage.appendChild(layer);}
   layer.replaceChildren();if(!session||session.terminal)return;
   if(session.kind==='ball'){
-   const b=session.bag;layer.appendChild(node('path',{d:`M ${b.x-19} ${b.y-5} q 19 -10 38 0 l -4 23 q -15 9 -30 0 Z`,fill:'#506f90',stroke:'#bdddec','stroke-width':2}));
-   layer.appendChild(node('circle',{cx:session.ball.x,cy:session.ball.y,r:session.radius,fill:'#f8bb66',stroke:'#fff0bc','stroke-width':2}));
-   layer.appendChild(node('path',{d:`M ${session.ball.x-session.radius+2} ${session.ball.y} h ${session.radius*2-4}`,stroke:'#d48158','stroke-width':3}));
+   const b=session.bag,closed=session.phase==='carry'&&Math.hypot(session.ball.x-b.x,session.ball.y-b.y)<session.radius*3;
+   const sprite=(file,box,bounds)=>{const frame=node('svg',{x:box.x,y:box.y,width:box.w,height:box.h,viewBox:bounds.join(' '),overflow:'hidden'});frame.appendChild(node('image',{href:'assets/props/'+file,width:512,height:512}));layer.appendChild(frame);};
+   // Shared source frame and baseline keep the pouch stationary between states.
+   sprite('toy-bag-'+(closed?'closed':'open')+'.png',{x:b.x-26,y:b.y-30,w:52,h:48},[35,125,440,340]);
+   sprite('toy-ball.png',{x:session.ball.x-session.radius,y:session.ball.y-session.radius,w:session.radius*2,h:session.radius*2},[80,80,352,352]);
   }else for(const b of session.bubbles)if(b.status==='live'){
    layer.appendChild(node('circle',{cx:b.x,cy:b.y,r:session.radius,fill:'#b5eaff','fill-opacity':.2,stroke:'#aee8ff','stroke-width':2}));
    layer.appendChild(node('circle',{cx:b.x-session.radius*.3,cy:b.y-session.radius*.35,r:2,fill:'#fff'}));

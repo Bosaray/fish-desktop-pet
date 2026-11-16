@@ -21,7 +21,7 @@
  async function up(e){const t=held;if(!t||t.id!==e.pointerId)return;move(e);held=null;try{stage.releasePointerCapture?.(e.pointerId);}catch{}e.preventDefault();e.stopImmediatePropagation();if(!t.moved){if(t.name==='box')panel.hidden?open():hide();else void window.desktopLocalCommand?.('nestRest');return;}try{const r=await api.home('prop',{name:t.name,...t.position,visible:true});if(r.snapshot)dispatchEvent(new CustomEvent('home-refresh',{detail:r.snapshot}));if(r.error)throw Error(r.error);}catch{window.desktopHomeMoveProp?.(t.name,t.origin);window.labDialogue?.receive('位置没存下来，再挪一次试试吧。');}}
  function cancelHeld(){const t=held;held=null;if(t?.moved)window.desktopHomeMoveProp?.(t.name,t.origin);if(t)try{stage.releasePointerCapture?.(t.id);}catch{}}
  document.addEventListener('pointermove',move,true);document.addEventListener('pointerup',e=>{void up(e);},true);document.addEventListener('pointercancel',cancelHeld,true);stage.addEventListener?.('lostpointercapture',cancelHeld);addEventListener('blur',cancelHeld);
- window.desktopSnackPanel={refresh,open,hide,stock};
+ window.desktopSnackPanel={refresh,open,hide,stock,isOpen:()=>!panel.hidden};
  addEventListener('resize',()=>{cancelHeld();hide();});document.addEventListener('keydown',e=>{if(e.key==='Escape'){cancelHeld();hide();}});
  api.onEvent(({type,data})=>{if(type==='visibility'&&!data||type==='connection'&&!data||type==='config'){cancelHeld();hide();}});
 })();

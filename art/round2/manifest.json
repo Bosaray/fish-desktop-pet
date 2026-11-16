@@ -1,0 +1,130 @@
+[
+  {
+    "file": "cushion-pressed.png",
+    "source": "cushion-pressed-v2-original.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      48,
+      174,
+      464,
+      338
+    ],
+    "bytes": 91733,
+    "sha256": "387ff7202176e8a1777e019675d5b5a7653d96224218552accf26cfe60753931"
+  },
+  {
+    "file": "snack-lid-closed.png",
+    "source": "snack-lid-closed-candidate.png",
+    "size": [
+      512,
+      768
+    ],
+    "bounds": [
+      50,
+      241,
+      462,
+      390
+    ],
+    "bytes": 87017,
+    "sha256": "b87df574d650f8c28c7b6c69324245e6e35e3f918f23f82642380bf557ed866a"
+  },
+  {
+    "file": "snack-lid-open.png",
+    "source": "snack-lid-open-aligned-candidate.png",
+    "size": [
+      512,
+      768
+    ],
+    "bounds": [
+      50,
+      38,
+      462,
+      255
+    ],
+    "bytes": 130789,
+    "sha256": "745c6d7d86171dbd41c009b824c817cd7c541289a68e5b24b6d1b8763905094f"
+  },
+  {
+    "file": "food-fish.png",
+    "source": "food-fish-candidate.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      52,
+      179,
+      460,
+      333
+    ],
+    "bytes": 115361,
+    "sha256": "37ab3f693bafca26f913be0f6822357ea17eed2707f14b9481bbddbdb36f5e4e"
+  },
+  {
+    "file": "food-cake.png",
+    "source": "food-cake-candidate.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      81,
+      56,
+      431,
+      456
+    ],
+    "bytes": 179417,
+    "sha256": "4623442a65eace543260dfd728621380f8c8f21f9e121438a1ecbf403ec3da2d"
+  },
+  {
+    "file": "toy-bag-open.png",
+    "source": "toy-bag-open-candidate.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      39,
+      132,
+      468,
+      461
+    ],
+    "bytes": 185552,
+    "sha256": "cac5c18ded2cac547933114b2bd4bc947da1164cb34c9aac26f731336638a1c4"
+  },
+  {
+    "file": "toy-bag-closed.png",
+    "source": "toy-bag-closed-candidate.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      70,
+      133,
+      435,
+      461
+    ],
+    "bytes": 155547,
+    "sha256": "cb2e0076b0faaff683dc220b1530bba39a9fcce7925f05e914ae2e54d654b3ea"
+  },
+  {
+    "file": "toy-ball.png",
+    "source": "toy-ball-candidate.png",
+    "size": [
+      512,
+      512
+    ],
+    "bounds": [
+      80,
+      80,
+      432,
+      432
+    ],
+    "bytes": 173180,
+    "sha256": "d193bde04dd2a3df0859391debbb797866e45f2fb76cc71ea816a9014b112272"
+  }
+]
